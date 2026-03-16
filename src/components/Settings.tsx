@@ -15,6 +15,17 @@ export function Settings() {
     const doc = win.document;
     doc.title = 'Google';
     
+    // Ensure the URL ends with a slash for correct relative path resolution
+    let baseUrl = window.location.origin + window.location.pathname;
+    if (!baseUrl.endsWith('/') && !baseUrl.endsWith('.html')) {
+      baseUrl += '/';
+    }
+
+    // Add a base tag to the parent about:blank document
+    const base = doc.createElement('base');
+    base.href = baseUrl;
+    doc.head.appendChild(base);
+    
     const icon = doc.createElement('link');
     icon.rel = 'icon';
     icon.href = 'https://www.google.com/favicon.ico';
@@ -35,13 +46,13 @@ export function Settings() {
     style.padding = '0';
     style.overflow = 'hidden';
     
-    // Use the current URL without the hash to ensure we hit the root correctly on GitHub Pages
-    iframe.src = window.location.href.split('#')[0];
+    iframe.src = baseUrl;
     
     doc.body.appendChild(iframe);
     doc.body.style.margin = '0';
     doc.body.style.padding = '0';
     doc.body.style.overflow = 'hidden';
+    doc.close();
   };
 
   const cloakOptions: { id: CloakType; name: string; icon: string }[] = [
