@@ -18,6 +18,5 @@ const Placeholder = ({ icon: Icon, title, desc }: { icon: any, title: string, de
   </div>
 );
 
-export const Apps = () => <Placeholder icon={Layout} title="Apps" desc="Discover a curated collection of powerful web applications." />;
 export const Movies = () => <Placeholder icon={Film} title="Movies" desc="Stream your favorite content directly in your browser." />;
 export const Browser = () => <Placeholder icon={Globe} title="Browser" desc="A powerful, secure browsing experience within Nebula." />;

@@ -3,7 +3,8 @@ import { Hub } from './components/Hub';
 import { Runner } from './components/Runner';
 import { Home } from './components/Home';
 import { Navbar } from './components/Navbar';
-import { Apps, Movies, Browser } from './components/Placeholders';
+import { Apps } from './components/Apps';
+import { Movies, Browser } from './components/Placeholders';
 import { Settings } from './components/Settings';
 import { Gamepad2 } from 'lucide-react';
 

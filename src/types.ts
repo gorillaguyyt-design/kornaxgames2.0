@@ -8,3 +8,9 @@ export interface Game {
   featured?: boolean;
   direct?: boolean;
 }
+
+export interface App {
+  name: string;
+  url: string;
+  img: string;
+}
