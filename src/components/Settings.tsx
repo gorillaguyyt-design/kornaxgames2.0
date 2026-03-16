@@ -6,23 +6,42 @@ export function Settings() {
   const { cloak, setCloak } = useTabCloak();
 
   const openAboutBlank = () => {
-    const win = window.open();
+    const win = window.open('about:blank', '_blank');
     if (!win) {
       alert('Popup blocked! Please allow popups to use this feature.');
       return;
     }
     
-    win.document.body.style.margin = '0';
-    win.document.body.style.height = '100vh';
+    const doc = win.document;
+    doc.title = 'Google';
     
-    const iframe = win.document.createElement('iframe');
-    iframe.style.border = 'none';
-    iframe.style.width = '100%';
-    iframe.style.height = '100%';
-    iframe.style.margin = '0';
-    iframe.src = window.location.origin + window.location.pathname;
+    const icon = doc.createElement('link');
+    icon.rel = 'icon';
+    icon.href = 'https://www.google.com/favicon.ico';
+    doc.head.appendChild(icon);
     
-    win.document.body.appendChild(iframe);
+    const iframe = doc.createElement('iframe');
+    const style = iframe.style;
+    
+    style.position = 'fixed';
+    style.top = '0';
+    style.bottom = '0';
+    style.left = '0';
+    style.right = '0';
+    style.width = '100%';
+    style.height = '100%';
+    style.border = 'none';
+    style.margin = '0';
+    style.padding = '0';
+    style.overflow = 'hidden';
+    
+    // Use the current URL without the hash to ensure we hit the root correctly on GitHub Pages
+    iframe.src = window.location.href.split('#')[0];
+    
+    doc.body.appendChild(iframe);
+    doc.body.style.margin = '0';
+    doc.body.style.padding = '0';
+    doc.body.style.overflow = 'hidden';
   };
 
   const cloakOptions: { id: CloakType; name: string; icon: string }[] = [
