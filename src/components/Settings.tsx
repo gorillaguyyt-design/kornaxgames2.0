@@ -20,7 +20,7 @@ export function Settings() {
     iframe.style.width = '100%';
     iframe.style.height = '100%';
     iframe.style.margin = '0';
-    iframe.src = window.location.origin;
+    iframe.src = window.location.origin + window.location.pathname;
     
     win.document.body.appendChild(iframe);
   };
