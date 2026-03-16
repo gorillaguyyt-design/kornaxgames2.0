@@ -50,7 +50,7 @@ export async function fetchGamesFromRepo(repoUrl: string): Promise<Game[]> {
       .map((dir: any) => ({
         id: dir.name,
         title: dir.name.replace(/-/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()),
-        url: `https://${repoUrl.split('/')[4]}.github.io/${repoUrl.split('/')[5]}/${dir.name}/index.html`,
+        url: `https://raw.githack.com/${repoUrl.split('/')[4]}/${repoUrl.split('/')[5]}/master/${dir.name}/index.html`,
         thumbnail: `https://picsum.photos/seed/${dir.name}/400/250`,
         description: `Play ${dir.name} now!`
       }));
