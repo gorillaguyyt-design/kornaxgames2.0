@@ -1,0 +1,19 @@
+# In your .github/workflows/deploy.yml file
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+
+# Add this env section at the top level
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      # ... other steps ...
