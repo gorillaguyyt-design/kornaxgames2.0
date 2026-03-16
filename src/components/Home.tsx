@@ -1,48 +1,87 @@
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { Rocket, Shield, Zap, Globe } from 'lucide-react';
+import { Rocket, Shield, Zap, Globe, ChevronRight } from 'lucide-react';
 
 export function Home() {
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center overflow-hidden">
       {/* Hero Section */}
-      <section className="relative w-full py-24 px-6 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-accent/10 to-transparent pointer-events-none" />
-        
+      <section className="relative w-full py-32 px-6 overflow-hidden min-h-[80vh] flex items-center">
+        {/* Animated Background Blobs */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <motion.div 
+            animate={{ 
+              x: [0, 100, 0],
+              y: [0, -50, 0],
+              scale: [1, 1.2, 1]
+            }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            className="absolute -top-24 -left-24 w-96 h-96 bg-accent/20 rounded-full blur-[100px]"
+          />
+          <motion.div 
+            animate={{ 
+              x: [0, -100, 0],
+              y: [0, 50, 0],
+              scale: [1, 1.5, 1]
+            }}
+            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+            className="absolute -bottom-24 -right-24 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[120px]"
+          />
+        </div>
+
         <div className="max-w-7xl mx-auto text-center relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-white/50">
-              NEBULA HUB
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-accent text-xs font-bold uppercase tracking-widest mb-8"
+            >
+              <Zap className="w-3 h-3 fill-current" />
+              Version 2.0 is Live
+            </motion.div>
+            
+            <h1 className="text-7xl md:text-9xl font-black tracking-tighter mb-8 leading-[0.85] bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-white/20">
+              NEBULA<br />HUB
             </h1>
-            <p className="text-xl text-text-secondary max-w-2xl mx-auto mb-10">
+            
+            <p className="text-xl md:text-2xl text-text-secondary max-w-2xl mx-auto mb-12 font-medium leading-relaxed">
               The ultimate destination for games, apps, and entertainment. 
               Experience the next generation of web-based discovery.
             </p>
             
-            <div className="flex flex-wrap justify-center gap-4">
-              <Link 
-                to="/games" 
-                className="px-8 py-4 bg-accent hover:bg-accent-hover text-white rounded-2xl font-bold text-lg shadow-[0_0_30px_rgba(124,58,237,0.3)] transition-all hover:scale-105 active:scale-95"
-              >
-                Launch Games
-              </Link>
-              <Link 
-                to="/apps" 
-                className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-2xl font-bold text-lg transition-all hover:scale-105 active:scale-95"
-              >
-                Explore Apps
-              </Link>
+            <div className="flex flex-wrap justify-center gap-6">
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Link 
+                  to="/games" 
+                  className="group px-10 py-5 bg-accent text-white rounded-2xl font-black text-lg shadow-[0_0_40px_rgba(124,58,237,0.4)] flex items-center gap-3 transition-all"
+                >
+                  Launch Games
+                  <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </motion.div>
+              
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Link 
+                  to="/apps" 
+                  className="px-10 py-5 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-2xl font-black text-lg transition-all"
+                >
+                  Explore Apps
+                </Link>
+              </motion.div>
             </div>
           </motion.div>
         </div>
       </section>
 
       {/* Features Grid */}
-      <section className="max-w-7xl mx-auto px-6 py-24 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full">
+      <section className="max-w-7xl mx-auto px-6 py-32 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full relative">
+        <div className="absolute inset-0 bg-accent/5 blur-[150px] -z-10" />
+        
         {[
           { icon: Rocket, title: "Lightning Fast", desc: "Optimized performance for seamless browsing and gaming." },
           { icon: Shield, title: "Secure", desc: "Built-in protection to keep your experience safe and private." },
@@ -51,17 +90,22 @@ export function Home() {
         ].map((feature, i) => (
           <motion.div
             key={i}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.1 }}
-            className="p-8 bg-surface border border-border rounded-3xl hover:border-accent/50 transition-colors group"
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ delay: i * 0.1, duration: 0.5 }}
+            whileHover={{ y: -10 }}
+            className="p-10 bg-surface/50 backdrop-blur-xl border border-border rounded-[2.5rem] hover:border-accent/50 transition-all group relative overflow-hidden"
           >
-            <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-              <feature.icon className="w-6 h-6 text-accent" />
+            <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+              <feature.icon className="w-24 h-24" />
             </div>
-            <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
-            <p className="text-text-secondary text-sm leading-relaxed">{feature.desc}</p>
+            
+            <div className="w-14 h-14 bg-accent/10 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-accent group-hover:text-white transition-all duration-500">
+              <feature.icon className="w-7 h-7" />
+            </div>
+            <h3 className="text-2xl font-bold mb-4 tracking-tight">{feature.title}</h3>
+            <p className="text-text-secondary text-base leading-relaxed">{feature.desc}</p>
           </motion.div>
         ))}
       </section>

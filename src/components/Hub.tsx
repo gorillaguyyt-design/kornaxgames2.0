@@ -17,43 +17,55 @@ export const Hub: React.FC = () => {
   return (
     <div className="min-h-screen pb-20">
       {/* Hero Section */}
-      <header className="relative py-20 px-6 overflow-hidden">
+      <header className="relative py-24 px-6 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-b from-accent/10 to-transparent" />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full opacity-20 blur-[120px] bg-accent rounded-full" />
+          <motion.div 
+            animate={{ 
+              scale: [1, 1.2, 1],
+              opacity: [0.1, 0.2, 0.1]
+            }}
+            transition={{ duration: 10, repeat: Infinity }}
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full blur-[120px] bg-accent rounded-full" 
+          />
         </div>
         
         <div className="relative z-10 max-w-7xl mx-auto text-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6 }}
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-widest mb-6">
               <TrendingUp className="w-3 h-3" />
               Trending Now
             </div>
-            <h1 className="text-5xl md:text-7xl font-black text-text-primary mb-6 tracking-tight">
+            <h1 className="text-6xl md:text-8xl font-black text-text-primary mb-6 tracking-tighter leading-none">
               GAMES <span className="text-accent">LIBRARY</span>
             </h1>
-            <p className="text-text-secondary text-lg md:text-xl max-w-2xl mx-auto mb-10">
+            <p className="text-text-secondary text-lg md:text-xl max-w-2xl mx-auto mb-10 font-medium">
               Discover and play high-performance web games directly in your browser. No downloads required.
             </p>
           </motion.div>
 
           {/* Search Bar */}
-          <div className="max-w-xl mx-auto relative group">
-            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-text-secondary group-focus-within:text-accent transition-colors">
-              <Search className="w-5 h-5" />
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="max-w-xl mx-auto relative group"
+          >
+            <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none text-text-secondary group-focus-within:text-accent transition-colors">
+              <Search className="w-6 h-6" />
             </div>
             <input 
               type="text"
               placeholder="Search games, categories..."
-              className="w-full bg-surface border border-border rounded-2xl py-4 pl-12 pr-4 text-text-primary focus:outline-none focus:border-accent focus:ring-4 focus:ring-accent/10 transition-all text-lg"
+              className="w-full bg-surface/50 backdrop-blur-xl border border-border rounded-2xl py-5 pl-14 pr-6 text-text-primary focus:outline-none focus:border-accent focus:ring-4 focus:ring-accent/10 transition-all text-xl font-medium placeholder:text-text-secondary/50"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-          </div>
+          </motion.div>
         </div>
       </header>
 
