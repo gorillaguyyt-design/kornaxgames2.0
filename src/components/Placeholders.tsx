@@ -19,4 +19,3 @@ const Placeholder = ({ icon: Icon, title, desc }: { icon: any, title: string, de
 );
 
 export const Movies = () => <Placeholder icon={Film} title="Movies" desc="Stream your favorite content directly in your browser." />;
-export const Browser = () => <Placeholder icon={Globe} title="Browser" desc="A powerful, secure browsing experience within Nebula." />;

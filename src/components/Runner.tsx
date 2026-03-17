@@ -85,7 +85,7 @@ export const Runner: React.FC = () => {
           <div className="h-6 w-[1px] bg-border mx-2" />
           <button 
             onClick={toggleFullscreen}
-            className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-hover text-white rounded-lg font-semibold transition-all"
+            className="flex items-center gap-2 px-4 py-2 bg-btn hover:bg-btn-hover text-white rounded-lg font-semibold transition-all"
           >
             {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
             <span className="text-sm hidden sm:inline">{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</span>
@@ -105,7 +105,7 @@ export const Runner: React.FC = () => {
               This game uses a relative path (<code className="text-accent">{game.url}</code>). 
               To play it, you must set the <code className="text-accent">GAME_BASE_URL</code> in <code className="text-white">src/data/games.ts</code>.
             </p>
-            <Link to="/" className="px-6 py-3 bg-accent hover:bg-accent-hover text-white rounded-xl font-bold transition-all">
+            <Link to="/" className="px-6 py-3 bg-btn hover:bg-btn-hover text-white rounded-xl font-bold transition-all">
               Return to Hub
             </Link>
           </div>

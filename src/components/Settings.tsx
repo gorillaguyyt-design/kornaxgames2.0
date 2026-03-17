@@ -1,9 +1,18 @@
 import { motion } from 'motion/react';
-import { Settings as SettingsIcon, ExternalLink, Shield, Palette, Bell, Globe } from 'lucide-react';
+import { Settings as SettingsIcon, ExternalLink, Shield, Palette, Bell, Globe, RotateCcw } from 'lucide-react';
 import { useTabCloak, CloakType } from '../context/TabCloakContext';
+import { useTheme } from '../context/ThemeContext';
+import { useProxy, ProxyMode } from '../context/ProxyContext';
 
 export function Settings() {
   const { cloak, setCloak } = useTabCloak();
+  const { buttonColor, accentColor, setButtonColor, setAccentColor } = useTheme();
+  const { proxyMode, setProxyMode } = useProxy();
+
+  const resetTheme = () => {
+    setButtonColor('#f97316');
+    setAccentColor('#f97316');
+  };
 
   const openAboutBlank = () => {
     const win = window.open('about:blank', '_blank');
@@ -101,7 +110,7 @@ export function Settings() {
               </p>
               <button
                 onClick={openAboutBlank}
-                className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-accent hover:bg-accent-hover text-white rounded-xl font-bold transition-all hover:scale-105 active:scale-95"
+                className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-btn hover:bg-btn-hover text-white rounded-xl font-bold transition-all hover:scale-105 active:scale-95"
               >
                 Launch Tab
               </button>
@@ -140,15 +149,99 @@ export function Settings() {
           </div>
         </section>
 
-        {/* Appearance Section (Placeholder) */}
-        <section className="p-8 bg-surface border border-border rounded-3xl opacity-50">
-          <div className="flex items-center gap-3 mb-6">
+        {/* Browser & Proxy Section */}
+        <section className="p-8 bg-surface border border-border rounded-3xl">
+          <div className="flex items-center gap-3 mb-8">
             <div className="p-2 bg-white/5 rounded-lg">
-              <Palette className="w-5 h-5 text-text-secondary" />
+              <Globe className="w-5 h-5 text-accent" />
             </div>
             <div>
-              <h2 className="text-xl font-bold">Appearance</h2>
-              <p className="text-sm text-text-secondary">Customize the look and feel (Coming Soon)</p>
+              <h2 className="text-xl font-bold">Browser & Proxy</h2>
+              <p className="text-sm text-text-secondary">Configure how the web browser handles traffic</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {[
+              { id: 'libcurl', name: 'Libcurl', desc: 'Server-side proxy (Bypasses most blocks)' },
+              { id: 'epoxy', name: 'Epoxy', desc: 'Client-side proxy (Advanced unblocking)' }
+            ].map((mode) => (
+              <button
+                key={mode.id}
+                onClick={() => setProxyMode(mode.id as ProxyMode)}
+                className={`p-6 rounded-2xl border text-left transition-all ${
+                  proxyMode === mode.id 
+                    ? 'bg-accent/10 border-accent shadow-[0_0_20px_rgba(249,115,22,0.2)]' 
+                    : 'bg-white/5 border-white/10 hover:bg-white/10'
+                }`}
+              >
+                <div className="font-bold mb-1">{mode.name}</div>
+                <div className="text-[10px] text-text-secondary leading-tight">{mode.desc}</div>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        {/* Appearance Section */}
+        <section className="p-8 bg-surface border border-border rounded-3xl">
+          <div className="flex items-center justify-between gap-4 mb-8">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-white/5 rounded-lg">
+                <Palette className="w-5 h-5 text-accent" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold">Appearance</h2>
+                <p className="text-sm text-text-secondary">Customize the look and feel of Nebula Hub</p>
+              </div>
+            </div>
+            <button
+              onClick={resetTheme}
+              className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 text-text-secondary hover:text-text-primary rounded-xl text-sm font-bold transition-all"
+            >
+              <RotateCcw className="w-4 h-4" />
+              Reset Defaults
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="space-y-4">
+              <label className="block">
+                <span className="text-sm font-bold uppercase tracking-wider text-text-secondary mb-2 block">
+                  Button Color
+                </span>
+                <div className="flex items-center gap-4 p-4 bg-bg/50 rounded-2xl border border-border">
+                  <input
+                    type="color"
+                    value={buttonColor}
+                    onChange={(e) => setButtonColor(e.target.value)}
+                    className="w-12 h-12 rounded-lg bg-transparent border-none cursor-pointer"
+                  />
+                  <div className="flex-grow">
+                    <div className="text-sm font-mono uppercase">{buttonColor}</div>
+                    <div className="text-xs text-text-secondary">Primary actions and UI buttons</div>
+                  </div>
+                </div>
+              </label>
+            </div>
+
+            <div className="space-y-4">
+              <label className="block">
+                <span className="text-sm font-bold uppercase tracking-wider text-text-secondary mb-2 block">
+                  Accent & Particle Color
+                </span>
+                <div className="flex items-center gap-4 p-4 bg-bg/50 rounded-2xl border border-border">
+                  <input
+                    type="color"
+                    value={accentColor}
+                    onChange={(e) => setAccentColor(e.target.value)}
+                    className="w-12 h-12 rounded-lg bg-transparent border-none cursor-pointer"
+                  />
+                  <div className="flex-grow">
+                    <div className="text-sm font-mono uppercase">{accentColor}</div>
+                    <div className="text-xs text-text-secondary">Gradients, particles, and highlights</div>
+                  </div>
+                </div>
+              </label>
             </div>
           </div>
         </section>

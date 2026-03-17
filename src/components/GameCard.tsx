@@ -3,16 +3,18 @@ import { Play } from 'lucide-react';
 import { Game } from '../types';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
+import { useTheme } from '../context/ThemeContext';
 
 interface GameCardProps {
   game: Game;
 }
 
 export const GameCard: React.FC<GameCardProps> = ({ game }) => {
+  const { buttonColor } = useTheme();
   return (
     <motion.div 
       whileHover={{ y: -8 }}
-      className="group relative bg-surface border border-border rounded-2xl overflow-hidden transition-all duration-300 hover:border-accent hover:shadow-[0_20px_40px_rgba(124,58,237,0.15)] flex flex-col h-full"
+      className="group relative bg-surface border border-border rounded-2xl overflow-hidden transition-all duration-300 hover:border-accent hover:shadow-[0_20px_40px_rgba(249,115,22,0.15)] flex flex-col h-full"
     >
       <div className="relative aspect-video overflow-hidden">
         <img 
@@ -30,7 +32,8 @@ export const GameCard: React.FC<GameCardProps> = ({ game }) => {
           >
             <Link 
               to={`/play/${game.id}`}
-              className="bg-accent text-white p-5 rounded-full shadow-[0_0_30px_rgba(124,58,237,0.5)] flex items-center justify-center"
+              className="bg-btn hover:bg-btn-hover text-white p-5 rounded-full flex items-center justify-center transition-all"
+              style={{ boxShadow: `0 0 30px ${buttonColor}80` }}
             >
               <Play className="w-8 h-8 fill-current" />
             </Link>
@@ -56,16 +59,6 @@ export const GameCard: React.FC<GameCardProps> = ({ game }) => {
           {game.description}
         </p>
         
-        <div className="mt-4 pt-4 border-t border-border/50 flex items-center justify-between">
-          <div className="flex -space-x-2">
-            {[1,2,3].map(i => (
-              <div key={i} className="w-6 h-6 rounded-full border-2 border-surface bg-white/10" />
-            ))}
-          </div>
-          <span className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">
-            {Math.floor(Math.random() * 100) + 10}k Plays
-          </span>
-        </div>
       </div>
     </motion.div>
   );

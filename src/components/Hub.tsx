@@ -17,16 +17,17 @@ export const Hub: React.FC = () => {
   return (
     <div className="min-h-screen pb-20">
       {/* Hero Section */}
-      <header className="relative py-24 px-6 overflow-hidden">
+      <header className="relative py-24 px-6">
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-accent/10 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-accent/20 via-accent/5 to-transparent" />
+          <div className="absolute -bottom-16 left-0 right-0 h-64 bg-gradient-to-t from-bg via-bg/50 to-transparent" />
           <motion.div 
             animate={{ 
-              scale: [1, 1.2, 1],
-              opacity: [0.1, 0.2, 0.1]
+              scale: [1, 1.1, 1],
+              opacity: [0.05, 0.15, 0.05]
             }}
-            transition={{ duration: 10, repeat: Infinity }}
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full blur-[120px] bg-accent rounded-full" 
+            transition={{ duration: 15, repeat: Infinity }}
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full blur-[150px] bg-accent rounded-full -translate-y-1/2" 
           />
         </div>
         

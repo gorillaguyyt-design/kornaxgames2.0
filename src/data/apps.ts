@@ -2,6 +2,11 @@ import { App } from '../types';
 
 export const apps: App[] = [
   {
+    "name": "Rammerhead Browser",
+    "url": "#/browser",
+    "img": "https://upload.wikimedia.org/wikipedia/commons/5/5a/Google_Chrome_icon_%282011%29.png"
+  },
+  {
     "name": "Google",
     "url": "https://google.com",
     "img": "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"
