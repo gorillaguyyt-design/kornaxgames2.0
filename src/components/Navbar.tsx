@@ -1,9 +1,18 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Gamepad2, Settings } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useProxy } from '../context/ProxyContext';
 
 export function Navbar() {
   const location = useLocation();
+  const { selectedNodeId } = useProxy();
+
+  const navItems = [
+    { path: '/games', label: 'GAMES' },
+    { path: '/apps', label: 'APPS' },
+    { path: `/play/${selectedNodeId}`, label: 'BROWSER', activePath: '/browser' },
+    { path: '/movies', label: 'MOVIES' }
+  ];
 
   return (
     <nav className="sticky top-0 z-40 w-full bg-bg/80 backdrop-blur-xl border-b border-border">
@@ -19,26 +28,24 @@ export function Navbar() {
         </Link>
         
         <div className="hidden md:flex items-center gap-2">
-          {[
-            { path: '/games', label: 'GAMES' },
-            { path: '/apps', label: 'APPS' },
-            { path: '/movies', label: 'MOVIES' },
-            { path: '/browser', label: 'BROWSER' }
-          ].map((item) => (
-            <Link 
-              key={item.path}
-              to={item.path} 
-              className="relative px-4 py-2 text-sm font-black tracking-widest text-text-secondary hover:text-white transition-colors group"
-            >
-              {item.label}
-              {location.pathname === item.path && (
-                <motion.div 
-                  layoutId="nav-underline"
-                  className="absolute bottom-0 left-4 right-4 h-0.5 bg-accent shadow-[0_0_10px_rgba(249,115,22,0.5)]"
-                />
-              )}
-            </Link>
-          ))}
+          {navItems.map((item) => {
+            const isActive = location.pathname === item.path || (item.activePath && location.pathname === item.activePath);
+            return (
+              <Link 
+                key={item.label}
+                to={item.path} 
+                className="relative px-4 py-2 text-sm font-black tracking-widest text-text-secondary hover:text-white transition-colors group"
+              >
+                {item.label}
+                {isActive && (
+                  <motion.div 
+                    layoutId="nav-underline"
+                    className="absolute bottom-0 left-4 right-4 h-0.5 bg-accent shadow-[0_0_10px_rgba(249,115,22,0.5)]"
+                  />
+                )}
+              </Link>
+            );
+          })}
         </div>
 
         <div className="flex items-center">

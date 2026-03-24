@@ -1,13 +1,16 @@
 import { motion } from 'motion/react';
-import { Settings as SettingsIcon, ExternalLink, Shield, Palette, Bell, Globe, RotateCcw } from 'lucide-react';
+import { Settings as SettingsIcon, ExternalLink, Shield, Palette, Bell, Globe, RotateCcw, Server } from 'lucide-react';
 import { useTabCloak, CloakType } from '../context/TabCloakContext';
 import { useTheme } from '../context/ThemeContext';
-import { useProxy, ProxyMode } from '../context/ProxyContext';
+import { useProxy } from '../context/ProxyContext';
+import { apps } from '../data/apps';
 
 export function Settings() {
   const { cloak, setCloak } = useTabCloak();
   const { buttonColor, accentColor, setButtonColor, setAccentColor } = useTheme();
-  const { proxyMode, setProxyMode } = useProxy();
+  const { selectedNodeId, setSelectedNodeId } = useProxy();
+
+  const rammerheadNodes = apps.filter(app => app.id.startsWith('rammerhead'));
 
   const resetTheme = () => {
     setButtonColor('#f97316');
@@ -24,13 +27,11 @@ export function Settings() {
     const doc = win.document;
     doc.title = 'Google';
     
-    // Ensure the URL ends with a slash for correct relative path resolution
     let baseUrl = window.location.origin + window.location.pathname;
     if (!baseUrl.endsWith('/') && !baseUrl.endsWith('.html')) {
       baseUrl += '/';
     }
 
-    // Add a base tag to the parent about:blank document
     const base = doc.createElement('base');
     base.href = baseUrl;
     doc.head.appendChild(base);
@@ -62,6 +63,9 @@ export function Settings() {
     doc.body.style.padding = '0';
     doc.body.style.overflow = 'hidden';
     doc.close();
+
+    // Redirect main tab to google
+    window.location.replace('https://google.com');
   };
 
   const cloakOptions: { id: CloakType; name: string; icon: string }[] = [
@@ -118,6 +122,34 @@ export function Settings() {
 
             <div className="p-6 bg-bg/50 rounded-2xl border border-border">
               <h3 className="font-bold mb-4 flex items-center gap-2">
+                <Server className="w-4 h-4 text-accent" />
+                Default Proxy Node
+              </h3>
+              <div className="space-y-2">
+                {rammerheadNodes.map((node) => (
+                  <button
+                    key={node.id}
+                    onClick={() => setSelectedNodeId(node.id)}
+                    className={`w-full flex items-center justify-between p-4 rounded-xl border transition-all ${
+                      selectedNodeId === node.id 
+                        ? 'bg-accent/10 border-accent' 
+                        : 'bg-white/5 border-white/10 hover:bg-white/10'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`w-2 h-2 rounded-full ${selectedNodeId === node.id ? 'bg-accent animate-pulse' : 'bg-white/20'}`} />
+                      <span className="text-sm font-bold">{node.name}</span>
+                    </div>
+                    {selectedNodeId === node.id && (
+                      <span className="text-[10px] font-black text-accent uppercase tracking-widest">Active</span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="p-6 bg-bg/50 rounded-2xl border border-border">
+              <h3 className="font-bold mb-4 flex items-center gap-2">
                 <Globe className="w-4 h-4 text-accent" />
                 Tab Cloaking
               </h3>
@@ -146,39 +178,6 @@ export function Settings() {
                 ))}
               </div>
             </div>
-          </div>
-        </section>
-
-        {/* Browser & Proxy Section */}
-        <section className="p-8 bg-surface border border-border rounded-3xl">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="p-2 bg-white/5 rounded-lg">
-              <Globe className="w-5 h-5 text-accent" />
-            </div>
-            <div>
-              <h2 className="text-xl font-bold">Browser & Proxy</h2>
-              <p className="text-sm text-text-secondary">Configure how the web browser handles traffic</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {[
-              { id: 'libcurl', name: 'Libcurl', desc: 'Server-side proxy (Bypasses most blocks)' },
-              { id: 'epoxy', name: 'Epoxy', desc: 'Client-side proxy (Advanced unblocking)' }
-            ].map((mode) => (
-              <button
-                key={mode.id}
-                onClick={() => setProxyMode(mode.id as ProxyMode)}
-                className={`p-6 rounded-2xl border text-left transition-all ${
-                  proxyMode === mode.id 
-                    ? 'bg-accent/10 border-accent shadow-[0_0_20px_rgba(249,115,22,0.2)]' 
-                    : 'bg-white/5 border-white/10 hover:bg-white/10'
-                }`}
-              >
-                <div className="font-bold mb-1">{mode.name}</div>
-                <div className="text-[10px] text-text-secondary leading-tight">{mode.desc}</div>
-              </button>
-            ))}
           </div>
         </section>
 

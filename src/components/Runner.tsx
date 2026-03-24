@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Maximize2, Minimize2, RefreshCw, Share2, ExternalLink } from 'lucide-react';
 import { MOCK_GAMES } from '../data/games';
+import { apps } from '../data/apps';
 import { motion, AnimatePresence } from 'motion/react';
 
 export const Runner: React.FC = () => {
@@ -11,7 +12,11 @@ export const Runner: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  const game = MOCK_GAMES.find(g => g.id === id);
+  const item = MOCK_GAMES.find(g => g.id === id) || apps.find(a => a.id === id);
+  const game = item ? {
+    title: 'title' in item ? item.title : item.name,
+    url: item.url
+  } : null;
 
   useEffect(() => {
     if (!game) {

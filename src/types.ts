@@ -10,7 +10,9 @@ export interface Game {
 }
 
 export interface App {
+  id: string;
   name: string;
   url: string;
   img: string;
+  internal?: boolean;
 }

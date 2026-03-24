@@ -1,26 +1,23 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export type ProxyMode = 'libcurl' | 'epoxy';
-
 interface ProxyContextType {
-  proxyMode: ProxyMode;
-  setProxyMode: (mode: ProxyMode) => void;
+  selectedNodeId: string;
+  setSelectedNodeId: (id: string) => void;
 }
 
 const ProxyContext = createContext<ProxyContextType | undefined>(undefined);
 
 export const ProxyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [proxyMode, setProxyMode] = useState<ProxyMode>(() => {
-    const saved = localStorage.getItem('proxyMode') as ProxyMode;
-    return (saved === 'libcurl' || saved === 'epoxy') ? saved : 'libcurl';
+  const [selectedNodeId, setSelectedNodeId] = useState<string>(() => {
+    return localStorage.getItem('selectedRammerheadNode') || 'rammerhead-1'; // Nana is rammerhead-1
   });
 
   useEffect(() => {
-    localStorage.setItem('proxyMode', proxyMode);
-  }, [proxyMode]);
+    localStorage.setItem('selectedRammerheadNode', selectedNodeId);
+  }, [selectedNodeId]);
 
   return (
-    <ProxyContext.Provider value={{ proxyMode, setProxyMode }}>
+    <ProxyContext.Provider value={{ selectedNodeId, setSelectedNodeId }}>
       {children}
     </ProxyContext.Provider>
   );
@@ -28,6 +25,8 @@ export const ProxyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
 export const useProxy = () => {
   const context = useContext(ProxyContext);
-  if (!context) throw new Error('useProxy must be used within a ProxyProvider');
+  if (context === undefined) {
+    throw new Error('useProxy must be used within a ProxyProvider');
+  }
   return context;
 };

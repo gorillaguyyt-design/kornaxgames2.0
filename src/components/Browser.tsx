@@ -1,160 +1,110 @@
-import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Globe, ArrowLeft, ArrowRight, RotateCw, Shield, Search, Lock, ShieldCheck } from 'lucide-react';
+import { Globe, ExternalLink, Shield, Zap, Search } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { apps } from '../data/apps';
+
 import { useProxy } from '../context/ProxyContext';
 
-export const Browser = () => {
-  const [url, setUrl] = useState('https://www.google.com/search?igu=1');
-  const [inputUrl, setInputUrl] = useState('https://google.com');
-  const { proxyMode } = useProxy();
-  const iframeRef = useRef<HTMLIFrameElement>(null);
-
-  const handleNavigate = (e: React.FormEvent) => {
-    e.preventDefault();
-    let targetUrl = inputUrl.trim();
-    
-    if (!targetUrl) return;
-
-    // Check if it's a URL or a search query
-    const isUrl = targetUrl.includes('.') && !targetUrl.includes(' ');
-    
-    if (isUrl) {
-      if (!targetUrl.startsWith('http')) {
-        targetUrl = 'https://' + targetUrl;
-      }
-    } else {
-      // Search query
-      targetUrl = `https://www.google.com/search?q=${encodeURIComponent(targetUrl)}`;
-    }
-    
-    if (proxyMode === 'libcurl') {
-      setUrl(`/api/proxy?url=${encodeURIComponent(targetUrl)}`);
-    } else {
-      // Epoxy mode
-      setUrl(`/api/proxy?url=${encodeURIComponent(targetUrl)}&mode=epoxy`);
-    }
-  };
-
-  const goBack = () => {
-    if (iframeRef.current?.contentWindow) {
-      iframeRef.current.contentWindow.postMessage({ type: 'NEBULA_BACK' }, '*');
-    }
-  };
-
-  const goForward = () => {
-    if (iframeRef.current?.contentWindow) {
-      iframeRef.current.contentWindow.postMessage({ type: 'NEBULA_FORWARD' }, '*');
-    }
-  };
-
-  const reload = () => {
-    if (iframeRef.current?.contentWindow) {
-      iframeRef.current.contentWindow.postMessage({ type: 'NEBULA_RELOAD' }, '*');
-    } else if (iframeRef.current) {
-      // Fallback
-      iframeRef.current.src = iframeRef.current.src;
-    }
-  };
-
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      if (event.data?.type === 'NEBULA_NAVIGATE') {
-        setInputUrl(event.data.url);
-      }
-    };
-
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, []);
+export function Browser() {
+  const { selectedNodeId } = useProxy();
+  const browsers = apps.filter(app => app.id.startsWith('rammerhead'));
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-12 h-[calc(100vh-120px)] flex flex-col">
-      <div className="flex flex-col items-center text-center mb-8">
+    <div className="max-w-7xl mx-auto px-6 py-12">
+      <div className="flex flex-col items-center text-center mb-16">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="w-16 h-16 bg-accent/10 rounded-2xl flex items-center justify-center mb-4"
+          className="w-20 h-20 bg-accent/10 rounded-3xl flex items-center justify-center mb-8"
         >
-          <Globe className="w-8 h-8 text-accent" />
+          <Globe className="w-10 h-10 text-accent" />
         </motion.div>
-        <h1 className="text-3xl font-black tracking-tighter uppercase">Web Browser</h1>
+        <h1 className="text-4xl font-black tracking-tighter mb-4 uppercase">Web Browser</h1>
+        <p className="text-text-secondary max-w-md">
+          Access the open web through our high-speed, secure proxy nodes.
+        </p>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="mt-8"
+        >
+          <Link
+            to={`/play/${selectedNodeId}`}
+            className="inline-flex items-center gap-3 px-8 py-4 bg-accent hover:bg-accent/90 text-white rounded-2xl font-black tracking-tighter uppercase shadow-[0_0_30px_rgba(124,58,237,0.3)] hover:scale-105 active:scale-95 transition-all"
+          >
+            <Zap className="w-5 h-5" /> Launch Default Browser
+          </Link>
+        </motion.div>
       </div>
 
-      <div className="flex-grow bg-surface border border-border rounded-[2.5rem] overflow-hidden flex flex-col shadow-2xl">
-        {/* Browser Toolbar */}
-        <div className="bg-white/5 border-b border-border p-4 flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <button 
-              onClick={goBack}
-              className="p-2 hover:bg-white/10 rounded-lg text-text-secondary transition-colors"
-              title="Go Back"
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        {browsers.map((browser, index) => {
+          const isSelected = browser.id === selectedNodeId;
+          return (
+            <motion.div
+              key={browser.id}
+              initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className={`group relative bg-surface border rounded-3xl p-8 transition-all overflow-hidden ${
+                isSelected ? 'border-accent shadow-[0_0_30px_rgba(124,58,237,0.15)]' : 'border-border hover:border-accent/50'
+              }`}
             >
-              <ArrowLeft className="w-4 h-4" />
-            </button>
-            <button 
-              onClick={goForward}
-              className="p-2 hover:bg-white/10 rounded-lg text-text-secondary transition-colors"
-              title="Go Forward"
-            >
-              <ArrowRight className="w-4 h-4" />
-            </button>
-            <button 
-              onClick={reload} 
-              className="p-2 hover:bg-white/10 rounded-lg text-text-secondary transition-colors"
-              title="Reload"
-            >
-              <RotateCw className="w-4 h-4" />
-            </button>
-            <div className="w-px h-4 bg-border mx-1" />
-            <div className="flex items-center gap-1.5 px-2 py-1 bg-emerald-500/10 rounded-md border border-emerald-500/20" title="Session Isolated: Your main browser cookies are not shared.">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-              <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-wider">Isolated</span>
-            </div>
-          </div>
+              {/* Background Glow */}
+              <div className={`absolute -right-20 -top-20 w-40 h-40 blur-3xl rounded-full transition-all ${
+                isSelected ? 'bg-accent/15' : 'bg-accent/5 group-hover:bg-accent/10'
+              }`} />
+              
+              <div className="relative z-10">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center">
+                    <Search className="w-6 h-6 text-accent" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-xl font-bold">{browser.name}</h3>
+                      {isSelected && (
+                        <span className="px-2 py-0.5 bg-accent/20 text-accent text-[8px] font-black uppercase tracking-widest rounded-full">Default</span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-green-500">
+                        <Zap className="w-3 h-3" /> Online
+                      </span>
+                      <span className="w-1 h-1 bg-white/20 rounded-full" />
+                      <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-text-secondary">
+                        <Shield className="w-3 h-3" /> Encrypted
+                      </span>
+                    </div>
+                  </div>
+                </div>
 
-          <form onSubmit={handleNavigate} className="flex-grow relative group">
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-              <Shield className="w-3 h-3 text-emerald-500" />
-              <div className="w-[1px] h-3 bg-border" />
-            </div>
-            <input
-              type="text"
-              value={inputUrl}
-              onChange={(e) => setInputUrl(e.target.value)}
-              className="w-full bg-black/40 border border-white/10 rounded-xl py-2.5 pl-12 pr-4 text-sm font-medium focus:outline-none focus:border-accent/50 transition-all"
-              placeholder="Search or enter URL..."
-            />
-            <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 hover:bg-white/10 rounded-lg text-text-secondary">
-              <Search className="w-3 h-3" />
-            </button>
-          </form>
+                <p className="text-sm text-text-secondary mb-8 leading-relaxed">
+                  A high-performance Rammerhead node providing unrestricted access to the web with advanced unblocking capabilities.
+                </p>
 
-          <div className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-xl border border-white/10">
-            <Lock className="w-3 h-3 text-emerald-500" />
-            <span className="text-[10px] font-black tracking-widest text-text-secondary uppercase">
-              {proxyMode}
-            </span>
-          </div>
-        </div>
+                <Link
+                  to={`/play/${browser.id}`}
+                  className={`w-full flex items-center justify-center gap-2 px-6 py-4 rounded-2xl font-bold transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg ${
+                    isSelected ? 'bg-accent text-white shadow-accent/20' : 'bg-btn hover:bg-btn-hover text-white shadow-accent/10'
+                  }`}
+                >
+                  Launch Browser <ExternalLink className="w-4 h-4" />
+                </Link>
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
 
-        {/* Browser Content */}
-        <div className="flex-grow relative bg-white">
-          <iframe
-            ref={iframeRef}
-            src={url}
-            className="w-full h-full border-none"
-            title="Browser Content"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-          />
-          
-          {/* Overlay for blocked sites warning */}
-          <div className="absolute bottom-4 right-4 max-w-xs bg-black/80 backdrop-blur-md p-4 rounded-2xl border border-white/10 text-[10px] text-text-secondary">
-            <p className="mb-2 uppercase font-black tracking-widest text-white">Browser Note</p>
-            <p>Some sites may block iframing for security. For a full "Rammerhead" experience, you would typically host a dedicated proxy server.</p>
-          </div>
-        </div>
+      <div className="mt-20 p-8 bg-white/5 border border-white/10 rounded-3xl max-w-2xl mx-auto text-center">
+        <h4 className="font-bold mb-2">Why use our browser?</h4>
+        <p className="text-sm text-text-secondary">
+          Our browser nodes use advanced proxy technology to bypass network filters and keep your browsing private. 
+          Each node is independent, so if one is blocked, you can try another.
+        </p>
       </div>
     </div>
   );
-};
+}
