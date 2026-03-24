@@ -170,7 +170,7 @@ export function Home() {
             </motion.div>
             
             <h1 className="text-7xl md:text-9xl font-black tracking-tighter mb-8 leading-[0.85] bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-white/20 uppercase">
-              KORNAX<br />GAMES
+              SKRIMPY<br />GAMES
             </h1>
             
             <p className="text-xl md:text-2xl text-text-secondary max-w-2xl mx-auto mb-12 font-medium leading-relaxed">

@@ -24,7 +24,7 @@ export function Navbar() {
           >
             <Gamepad2 className="w-6 h-6 text-white" />
           </motion.div>
-          <span className="font-black text-2xl tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white to-white/50 uppercase">KORNAX GAMES</span>
+          <span className="font-black text-2xl tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white to-white/50 uppercase">SKRIMPY GAMES</span>
         </Link>
         
         <div className="hidden md:flex items-center gap-2">
